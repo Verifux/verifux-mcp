@@ -1,0 +1,29 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.json",
+  "name": "io.github.verifux/snapshot",
+  "description": "Run a free Verifux UX and AI-agent readiness snapshot on any website: a band, a pass rate over named automated checks, the top findings, and whether the page declares an AI-agent surface.",
+  "repository": {
+    "url": "https://github.com/Verifux/verifux-mcp",
+    "source": "github"
+  },
+  "websiteUrl": "https://verifux.app/",
+  "version": "1.0.3",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@verifux/mcp",
+      "version": "1.0.3",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "VERIFUX_API_URL",
+          "description": "Override the backend the server calls. Defaults to https://api.verifux.app.",
+          "isRequired": false
+        }
+      ]
+    }
+  ]
+}
