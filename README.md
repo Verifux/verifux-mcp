@@ -1,12 +1,15 @@
 # Verifux snapshot MCP server
 
-Run a free [Verifux](https://verifux.app) snapshot from any MCP client (Claude Desktop,
-Cursor, and others). One tool, `run_snapshot`, audits a URL for UX, conversion and
-**AI-agent readiness** and returns a band, a check pass-rate, the top findings, and whether
-the page declares an agent surface.
+[![npm](https://img.shields.io/npm/v/@verifux/mcp?color=FF0033&label=%40verifux%2Fmcp)](https://www.npmjs.com/package/@verifux/mcp)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-Zero dependencies, no local browser, no API key. It calls the hosted Verifux API, where the
-snapshot is email-optional — so install is just `npx`.
+**Can an AI agent actually use your website?** This MCP server gives Claude, Cursor and
+any other MCP client one tool, `run_snapshot`, that audits any URL for UX, conversion and
+**AI-agent readiness** in a few seconds, and tells you whether the page even declares a
+surface an agent can act on.
+
+Zero dependencies, no local browser, no API key, no sign-up. It calls the hosted
+[Verifux](https://verifux.app) API, so installing is just `npx`.
 
 ## Install
 
@@ -23,28 +26,52 @@ Add it to your MCP client config:
 }
 ```
 
-Then ask your agent to "run a Verifux snapshot on https://example.com".
+Then ask your agent: "run a Verifux snapshot on https://example.com".
 
-## Tool
+## What you get
 
-`run_snapshot({ url })` → text report:
+`run_snapshot({ url })` returns a plain-text report:
 
 ```
-Verifux snapshot for example.com
-Band: Mixed - 12 of 16 automated checks passed
-Findings: 0 critical, 3 major, 2 minor
+Verifux snapshot for your-store.com
+Band: Mixed - 13 of 17 automated checks passed
+0 critical, 2 major, 1 minor
 
-Top findings:
-  [MAJOR] No H1 heading on the page
-  ...
+  [MAJOR] Largest Contentful Paint at 3.1s, past the 2.5s threshold
+  [MINOR] Cumulative Layout Shift of 0.15, content moves under the reader
 
 AI agent surface: none detected
 ```
 
+That last line is the one most tools miss. As shopping and research agents become real
+traffic, a site that declares nothing an agent can call is invisible to them, and never
+sees why. Verifux is built to measure exactly that, alongside the human-facing UX.
+
+## Why it exists
+
+Lighthouse and accessibility scanners tell you about code and compliance. Verifux asks a
+different question: can a person, and now an AI agent, actually get the job done on this
+page? The snapshot is the fast, free read. It is deterministic, so the same page scores the
+same way twice, and it carries no score out of 100 on purpose, because that number belongs
+to the full audit.
+
+## The full audit
+
+This tool is the **free snapshot**. The full 54-checkpoint audit, across human experience
+(MX), behavioural design (BX) and AI-agent readiness (AIX), with a written report and a PDF,
+lives at **[verifux.app](https://verifux.app)**. No account, no subscription.
+
 ## Notes
 
-- This is the **free snapshot** — a fast, deterministic read, not the full 54-checkpoint
-  audit. It has no score out of 100 on purpose. For the full UX / behavioural / AI-readiness
-  audit with a report and PDF, go to [verifux.app](https://verifux.app).
 - Point at a different backend with `VERIFUX_API_URL` (defaults to `https://api.verifux.app`).
-- Source for the hosted engine is not public. This repo is the MCP client shim only.
+- The snapshot is email-optional through this client, so there is nothing to sign up for.
+- The hosted engine is closed source. This repository is the MCP client shim only: a small,
+  zero-dependency wrapper that calls the public API.
+
+## Links
+
+- Run any site in your browser: [verifux.app](https://verifux.app)
+- CLI version: [`@verifux/cli`](https://www.npmjs.com/package/@verifux/cli) (`npx @verifux/cli your-site.com`)
+- Machine-readable surface: [llms.txt](https://verifux.app/llms.txt), [mcp.json](https://verifux.app/.well-known/mcp.json)
+
+MIT licensed. Built by [Designerama](https://verifux.app).
