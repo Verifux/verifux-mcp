@@ -79,7 +79,7 @@ alert, nothing in a dashboard. Just traffic that never arrives.
 | | |
 | --- | --- |
 | **Name** | `run_snapshot` |
-| **Takes** | `url` — any publicly reachable URL. Nothing else |
+| **Takes** | `url`, any publicly reachable URL. Nothing else |
 | **Returns** | Band (Strong / Mixed / Weak / Poor), pass rate over named automated checks, top findings, and whether an agent surface is declared |
 | **Env** | `VERIFUX_API_URL` to point at a different backend. Defaults to `https://api.verifux.app` |
 
