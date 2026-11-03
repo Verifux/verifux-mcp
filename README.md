@@ -1,19 +1,35 @@
-# Verifux snapshot MCP server
+<div align="center">
 
-[![npm](https://img.shields.io/npm/v/@verifux/mcp?color=FF0033&label=%40verifux%2Fmcp)](https://www.npmjs.com/package/@verifux/mcp)
-[![license: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+# Verifux · MCP server
 
-**Can an AI agent actually use your website?** This MCP server gives Claude, Cursor and
-any other MCP client one tool, `run_snapshot`, that audits any URL for UX, conversion and
-**AI-agent readiness** in a few seconds, and tells you whether the page even declares a
-surface an agent can act on.
+### Let your coding agent check whether an AI agent can use a site
 
-Zero dependencies, no local browser, no API key, no sign-up. It calls the hosted
-[Verifux](https://verifux.app) API, so installing is just `npx`.
+One tool, `run_snapshot`. Point it at any URL and it reports what an agent actually finds
+when it arrives: a band, a pass rate, the top findings, and whether the page declares an
+agent surface at all.
 
-## Install
+**Zero dependencies. No sign-up. No API key.**
 
-Add it to your MCP client config:
+[![npm](https://img.shields.io/npm/v/@verifux/mcp?color=FF0033&label=npm&logo=npm&logoColor=white)](https://www.npmjs.com/package/@verifux/mcp)
+[![downloads](https://img.shields.io/npm/dm/@verifux/mcp?color=FF0033&label=downloads)](https://www.npmjs.com/package/@verifux/mcp)
+[![registry](https://img.shields.io/badge/MCP_registry-listed-7C3AED)](https://registry.modelcontextprotocol.io/?q=verifux)
+[![node](https://img.shields.io/node/v/@verifux/mcp?color=111827&label=node)](https://nodejs.org)
+[![license](https://img.shields.io/npm/l/@verifux/mcp?color=111827)](./LICENSE)
+[![dependencies](https://img.shields.io/badge/dependencies-0-111827)](./package.json)
+
+</div>
+
+---
+
+## Add it
+
+**Claude Code**
+
+```bash
+claude mcp add verifux -- npx -y @verifux/mcp
+```
+
+**Any MCP client** (Claude Desktop, Cursor, and others)
 
 ```json
 {
@@ -26,52 +42,71 @@ Add it to your MCP client config:
 }
 ```
 
-Then ask your agent: "run a Verifux snapshot on https://example.com".
+Then just ask: *"run a Verifux snapshot on example.com"*.
 
-## What you get
+---
 
-`run_snapshot({ url })` returns a plain-text report:
+## What comes back
 
-```
-Verifux snapshot for your-store.com
-Band: Mixed - 13 of 17 automated checks passed
-0 critical, 2 major, 1 minor
+A real run, pasted verbatim:
 
-  [MAJOR] Largest Contentful Paint at 3.1s, past the 2.5s threshold
-  [MINOR] Cumulative Layout Shift of 0.15, content moves under the reader
+```text
+Verifux snapshot for example.com
+Band: Mixed - 13 of 16 automated checks passed
+Findings: 0 critical, 2 major, 1 minor
+
+Top findings:
+  [MAJOR] No Organization or FAQPage structured data for AI answer engines
+  [MAJOR] No H1 heading on the page
+  [MINOR] No meta description for search engines or AI summaries to quote
 
 AI agent surface: none detected
 ```
 
-That last line is the one most tools miss. As shopping and research agents become real
-traffic, a site that declares nothing an agent can call is invisible to them, and never
-sees why. Verifux is built to measure exactly that, alongside the human-facing UX.
+That last line is the one almost nobody checks. **`none detected`** means nothing an agent looks
+for was found: no declared tools, no `/.well-known/mcp.json`, no `/agents.md`.
 
-## Why it exists
+> We got exactly that on our own site. The file existed. We were serving it at the wrong path, and
+> nothing anywhere warned us. One path, and the whole surface was invisible.
 
-Lighthouse and accessibility scanners tell you about code and compliance. Verifux asks a
-different question: can a person, and now an AI agent, actually get the job done on this
-page? The snapshot is the fast, free read. It is deterministic, so the same page scores the
-same way twice, and it carries no score out of 100 on purpose, because that number belongs
-to the full audit.
+Agent readiness is the only part of a site that can break without anyone noticing. No error, no
+alert, nothing in a dashboard. Just traffic that never arrives.
 
-## The full audit
+---
 
-This tool is the **free snapshot**. The full 54-checkpoint audit, across human experience
-(MX), behavioural design (BX) and AI-agent readiness (AIX), with a written report and a PDF,
-lives at **[verifux.app](https://verifux.app)**. No account, no subscription.
+## The tool
 
-## Notes
+| | |
+| --- | --- |
+| **Name** | `run_snapshot` |
+| **Takes** | `url` — any publicly reachable URL. Nothing else |
+| **Returns** | Band (Strong / Mixed / Weak / Poor), pass rate over named automated checks, top findings, and whether an agent surface is declared |
+| **Env** | `VERIFUX_API_URL` to point at a different backend. Defaults to `https://api.verifux.app` |
 
-- Point at a different backend with `VERIFUX_API_URL` (defaults to `https://api.verifux.app`).
-- The snapshot is email-optional through this client, so there is nothing to sign up for.
-- The hosted engine is closed source. This repository is the MCP client shim only: a small,
-  zero-dependency wrapper that calls the public API.
+It deliberately has **no score out of 100**. That belongs to the full 54-checkpoint audit, and two
+different numbers out of 100 would contradict each other.
 
-## Links
+---
 
-- Run any site in your browser: [verifux.app](https://verifux.app)
-- CLI version: [`@verifux/cli`](https://www.npmjs.com/package/@verifux/cli) (`npx @verifux/cli your-site.com`)
-- Machine-readable surface: [llms.txt](https://verifux.app/llms.txt), [mcp.json](https://verifux.app/.well-known/mcp.json)
+## Prefer a terminal?
 
-MIT licensed. Built by [Designerama](https://verifux.app).
+The same check as a CLI, with a CI mode that fails the build when the band drops:
+
+```bash
+npx @verifux/cli your-site.com --ci --min-band mixed
+```
+
+→ **[Verifux/verifux-cli](https://github.com/Verifux/verifux-cli)**
+
+---
+
+<div align="center">
+
+**This is the free snapshot:** a fast, deterministic read. The full audit lives at
+**[verifux.app](https://verifux.app)**.
+
+This repo is the client shim. The audit engine behind `api.verifux.app` is not open source.
+
+<sub>MIT · built by <a href="https://verifux.app">Verifux</a></sub>
+
+</div>
