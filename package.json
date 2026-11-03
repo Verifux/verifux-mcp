@@ -1,6 +1,6 @@
 {
   "name": "@verifux/mcp",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Zero-dependency MCP server: run a free Verifux UX & AI-readiness snapshot from any MCP client.",
   "type": "commonjs",
   "keywords": [

@@ -41,10 +41,16 @@ const result = (id, res) => ({ jsonrpc: '2.0', id, result: res });
 const errorResponse = (id, code, message) => ({ jsonrpc: '2.0', id: id ?? null, error: { code, message } });
 const serialise = (obj) => JSON.stringify(obj) + '\n';
 
+// Identifies this client to the API so an MCP run is distinguishable from a web
+// or CLI run in the dashboard (Verifux usage tagging). The server maps the
+// `verifux-mcp/` prefix to source 'mcp'; version tracks SERVER_INFO so it never
+// drifts from what the handshake reports.
+const UA = `verifux-mcp/${SERVER_INFO.version}`;
+
 async function runSnapshot(url) {
   if (typeof url !== 'string' || !url.trim()) throw new Error('A "url" argument is required.');
   const start = await fetch(`${API_BASE}/api/snapshot`, {
-    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ url: url.trim() }),
+    method: 'POST', headers: { 'Content-Type': 'application/json', 'User-Agent': UA }, body: JSON.stringify({ url: url.trim() }),
   });
   const startJson = await start.json().catch(() => ({}));
   if (!start.ok || !startJson.jobId) {
@@ -55,7 +61,7 @@ async function runSnapshot(url) {
   while (Date.now() < deadline) {
     await sleep(2500);
     let j = {};
-    try { j = await (await fetch(`${API_BASE}/api/snapshot/${jobId}/status`)).json(); } catch { continue; }
+    try { j = await (await fetch(`${API_BASE}/api/snapshot/${jobId}/status`, { headers: { 'User-Agent': UA } })).json(); } catch { continue; }
     if (j.status === 'error') throw new Error(`Snapshot could not complete: ${j.message || j.code || 'unknown error'}`);
     if (j.status === 'done') return renderSnapshot(j.snapshot);
   }
