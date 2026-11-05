@@ -16,6 +16,7 @@ agent surface at all.
 [![node](https://img.shields.io/node/v/@verifux/mcp?color=111827&label=node)](https://nodejs.org)
 [![license](https://img.shields.io/npm/l/@verifux/mcp?color=111827)](./LICENSE)
 [![dependencies](https://img.shields.io/badge/dependencies-0-111827)](./package.json)
+[![Snapshot MCP server](https://mcprush.com/badge/verifux-snapshot-mcp/card.svg)](https://mcprush.com/to/verifux-snapshot-mcp?ref=badge)
 
 </div>
 
